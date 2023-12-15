@@ -49,14 +49,14 @@ class ExampleInstrumentedTest {
 
     @Test
     fun MarkerTesting(){
-        var p_arr = arrayListOf<PointF>(PointF(0f,0f),
-            PointF(0f, 30f), PointF(10f, 30f), PointF(20f, 30f),
-            PointF(30f, 30f)
+        var p_arr = arrayListOf<PointF>(PointF(0f,20f),
+            PointF(5f, 30f), PointF(10f, 30f), PointF(20f, 30f),
+            PointF(30f, 30f), PointF(40f, 30f), PointF(50f, 30f), PointF(60f, 30f)
         )
         p_arr.forEach{
             Log.i("testing", it.toString())
             onView(withId(R.id.mapView)).perform(MapViewSetMarkerAction(it))
-            Thread.sleep(500)
+            Thread.sleep(1000)
         }
 
 

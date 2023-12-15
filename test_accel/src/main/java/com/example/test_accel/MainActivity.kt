@@ -159,7 +159,7 @@ class MainActivity : AppCompatActivity() {
                 "         id=\"path2012\" />\n" +
                 "    </g>\n" +
                 "  </g>\n" +
-
+                //"<ellipse cx=\"50\" cy=\"15\" rx=\"10\" ry=\"10\" stroke=\"red\" fill=\"red\" />\n"+
                 "</svg>\n"
         map = MapModel("test", "", Info(), svg_str)
         //Log.i("tag", "MainActivity")

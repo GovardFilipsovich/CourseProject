@@ -33,10 +33,7 @@ class MapView: View{
     private lateinit var svg: SVG
     private lateinit var pic: Picture
 
-    private  var scale_koeffs = floatArrayOf(0.0f, 0.0f,1f,0.5f)
-    //private var scale_koeffs_land = floatArrayOf(0f,0.0f,1f,0.5f)
     private var rect: RectF = RectF(0f,0f,0f,0f)
-    private var is_rect_reset = true
 
     private var c_width: Int = 0
     private var c_height: Int = 0
@@ -50,14 +47,22 @@ class MapView: View{
     // Log.i("tag", "Hello " + svg.documentWidth / rect.right + " " + svg.documentHeight / rect.bottom)
     fun setMarker(p: PointF){
         marker_coords = p
-        // todo: Расчет положения маркера
-        // todo: Расчет размера маркера
+        // Расчет размера маркера
+        // Домножение на 0.6 связано с тем, что несмотря на то, что виджету выделяется некоторое пространство на холсте,
+        // он занимает всю его ширину, и примерно 0.4 от высоты
+        var rx = 10.0 / c_width * svg.documentWidth * 0.6
+        Log.i("testing", "" + rx)
+        var ry = 10.0 / c_height * svg.documentHeight
+        Log.i("testing", "" + ry)
 
-        val p = svg_str
-        svg_str.replace("</svg>", "")
+        // Сохранение плана без маркера
+        val pr_svg_str = svg_str
+
+        val ellipse = "<ellipse cx=\"${p.x}\" cy=\"${p.y}\" rx=\"${rx}\" ry=\"${ry}\" stroke=\"#ff4f00\" fill=\"#ff4f00\" />"
+        svg_str = svg_str.replace("</svg>", ellipse + " </svg>")
         setSvg(svg_str)
         // Возращаем план к состоянию, до добавленимя маркера
-        svg_str = p
+        svg_str = pr_svg_str
         invalidate()
     }
 
@@ -96,7 +101,7 @@ class MapView: View{
         //масштабирование по вертикали
         rect.top = (c_height * 0.1).toFloat()
         rect.bottom = ((c_height * 0.1) + c_height * 0.5 * 0.7.pow(k-1)).toFloat()
-        /Log.i("testing", "" + rect.top + " " + rect.bottom)
+        //Log.i("testing", "" + rect.top + " " + rect.bottom)
 
         invalidate()
     }
@@ -133,7 +138,6 @@ class MapView: View{
             c_height = height
             setScale(k)
         }
-
 
         canvas.apply {
             strokePaint.strokeWidth = 10F
