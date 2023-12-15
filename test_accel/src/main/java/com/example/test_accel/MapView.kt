@@ -47,8 +47,17 @@ class MapView: View{
 
     // Пример добавления круга план в svg
     // "<ellipse cx=\"50\" cy=\"15\" rx=\"1.8\" ry=\"0.85\" stroke=\"red\" fill=\"red\" />\n"+
+    // Log.i("tag", "Hello " + svg.documentWidth / rect.right + " " + svg.documentHeight / rect.bottom)
     fun setMarker(p: PointF){
         marker_coords = p
+        // todo: Расчет положения маркера
+        // todo: Расчет размера маркера
+
+        val p = svg_str
+        svg_str.replace("</svg>", "")
+        setSvg(svg_str)
+        // Возращаем план к состоянию, до добавленимя маркера
+        svg_str = p
         invalidate()
     }
 
@@ -56,7 +65,6 @@ class MapView: View{
         svg_str = str
         svg = SVG.getFromString(str)
         pic = svg.renderToPicture()
-
     }
 
     fun moveHor(k: Int){
@@ -88,13 +96,12 @@ class MapView: View{
         //масштабирование по вертикали
         rect.top = (c_height * 0.1).toFloat()
         rect.bottom = ((c_height * 0.1) + c_height * 0.5 * 0.7.pow(k-1)).toFloat()
-        Log.i("testing", "" + rect.top + " " + rect.bottom)
-//        is_rect_reset = true
+        /Log.i("testing", "" + rect.top + " " + rect.bottom)
+
         invalidate()
     }
 
     constructor(svg_par: String, context: Context, attributeSet: AttributeSet, defStyle: Int): super(context, attributeSet, defStyle){
-        //Log.i("tag", "Before svg_str setter")
         setSvg(svg_par)
 
     }
@@ -130,7 +137,7 @@ class MapView: View{
 
         canvas.apply {
             strokePaint.strokeWidth = 10F
-            Log.i("tag", "Hello " + svg.documentWidth / rect.right + " " + svg.documentHeight / rect.bottom)
+            //Log.i("tag", "Hello " + svg.documentWidth / rect.right + " " + svg.documentHeight / rect.bottom)
             drawPicture(pic, rect)
 
         }
