@@ -1,23 +1,42 @@
 package com.example.test_accel
 
+import android.content.Context
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
+import android.graphics.PointF
 import android.graphics.drawable.BitmapDrawable
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.core.content.ContextCompat
 import com.caverock.androidsvg.SVG
 import com.example.test_accel.databinding.ActivityMainBinding
 import kotlin.math.ceil
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), SensorEventListener {
     private lateinit var map: MapModel
     private lateinit var bind: ActivityMainBinding
+    private var start = true
+    private var start_steps = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         bind = ActivityMainBinding.inflate(layoutInflater)
         setContentView(bind.root)
+        // Запрос разрешения на снятия показаний с датчиков активности
+        if(ContextCompat.checkSelfPermission(this,
+                android.Manifest.permission.ACTIVITY_RECOGNITION) == PackageManager.PERMISSION_DENIED){
+
+            //ask for permission
+            requestPermissions(arrayOf(android.Manifest.permission.ACTIVITY_RECOGNITION), 286)
+        }
+
+
         //map = intent.getSerializableExtra("map") as MapModel
         val svg_str = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
                 "<!-- Created with Inkscape (http://www.inkscape.org/) -->\n" +
@@ -182,6 +201,32 @@ class MainActivity : AppCompatActivity() {
         bind.placeButton.setOnClickListener {
             bind.mapView.setOnPlacement()
         }
+        init_sensors()
 
+    }
+
+    fun init_sensors(){
+        var sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        Log.i("testing", sensorManager.toString())
+        var stepSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
+        Log.i("testing", stepSensor.toString())
+        sensorManager.registerListener(this, stepSensor, SensorManager.SENSOR_DELAY_NORMAL)
+    }
+
+    override fun onSensorChanged(event: SensorEvent?) {
+        Log.i("testing", event.toString())
+        Log.i("testing", event!!.values[0].toString())
+        if(start){
+            start_steps = event!!.values[0].toInt()
+            start = false
+        }
+        Log.i("testing", "Steps: " + (event!!.values[0] - start_steps) )
+
+        // todo: выделить обновление интерфейса в отдельный поток
+
+    }
+
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
+        Log.i("testing", sensor.toString() + " " + accuracy)
     }
 }

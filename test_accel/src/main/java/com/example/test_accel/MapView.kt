@@ -45,6 +45,8 @@ class MapView: View{
 
     private var SETTING_PLACE_FLAG = false
 
+    private var DEFAULT_MARKER_POSE = true
+
     fun setOnPlacement(){
         SETTING_PLACE_FLAG = true;
     }
@@ -71,6 +73,7 @@ class MapView: View{
         //Log.i("testing", "" + rx)
         var ry = 10.0 / c_height * svg.documentHeight
         //Log.i("testing", "" + ry)
+
         p.y -= 7
 
 
@@ -163,6 +166,12 @@ class MapView: View{
             //Log.i("tag", "Hello " + svg.documentWidth / rect.right + " " + svg.documentHeight / rect.bottom)
             drawPicture(pic, rect)
 
+        }
+
+        // Установка маркера по-умолчанию
+        if(DEFAULT_MARKER_POSE){
+            setMarker(marker_coords)
+            DEFAULT_MARKER_POSE = false
         }
         //Log.i("tag", "after drawing")
     }
