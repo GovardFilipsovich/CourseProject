@@ -37,8 +37,8 @@ class MapsActivity : AppCompatActivity(), OnMapClickListener {
         val maps_list = bind.carRec
 
         var source = arrayListOf<MapModel>()
-        var BASE_URL = "http://10.0.2.2:9000/"
-        //var BASE_URL = "http://192.168.73.70:9000/"
+        //var BASE_URL = "http://10.0.2.2:9000/"
+        var BASE_URL = "http://192.168.73.70:9000/"
         val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
