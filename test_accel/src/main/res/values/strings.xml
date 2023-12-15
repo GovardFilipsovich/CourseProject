@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">test_accel</string>
+    <string name="defalut_map"><![CDATA["<svg width=\"100\" height=\"100\" xmlns=\"http://www.w3.org/2000/svg\">
+ <g>
+  <title>Layer 1</title>
+  <ellipse stroke=\"#000\" ry=\"50\" rx=\"50\" id=\"svg_1\" cy=\"50\" cx=\"50\" fill=\"#fff\"/>
+  <line id=\"svg_2\" y2=\"100\" x2=\"99.78724\" y1=\"-0\" x1=\"-0\" stroke=\"#000\" fill=\"none\"/>
+ </g>
+</svg>"]]></string>
+    <string name="test_square"><![CDATA["<svg width=\"100\" height=\"100\" xmlns=\"http://www.w3.org/2000/svg\">
+ <g>
+  <title>Layer 1</title>
+  <rect id=\"svg_4\" height=\"50\" width=\"100\" y=\"25\" x=\"0\" stroke=\"#000\" fill=\"#000000\"/>
+ </g>
+</svg>"]]></string>
 </resources>
