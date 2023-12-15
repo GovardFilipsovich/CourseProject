@@ -29,8 +29,10 @@ class MapView: View{
         style = Paint.Style.STROKE
         color = Color.BLACK
     }
+    private var svg_str = ""
     private lateinit var svg: SVG
     private lateinit var pic: Picture
+
     private  var scale_koeffs = floatArrayOf(0.0f, 0.0f,1f,0.5f)
     //private var scale_koeffs_land = floatArrayOf(0f,0.0f,1f,0.5f)
     private var rect: RectF = RectF(0f,0f,0f,0f)
@@ -41,7 +43,17 @@ class MapView: View{
 
     private var k: Int = 1
 
+    private var marker_coords = PointF(50f, 15f)
+
+    // Пример добавления круга план в svg
+    // "<ellipse cx=\"50\" cy=\"15\" rx=\"1.8\" ry=\"0.85\" stroke=\"red\" fill=\"red\" />\n"+
+    fun setMarker(p: PointF){
+        marker_coords = p
+        invalidate()
+    }
+
     fun setSvg(str: String){
+        svg_str = str
         svg = SVG.getFromString(str)
         pic = svg.renderToPicture()
 
@@ -49,16 +61,16 @@ class MapView: View{
 
     fun moveHor(k: Int){
         //TODO:функция перемещения по горизонтали
-        scale_koeffs[Sides.LEFT.num] = ((k-1)*0.1).toFloat()
-        scale_koeffs[Sides.RIGHT.num] = 1 + ((k-1)*0.1).toFloat()
     }
 
     fun inc(){
-        k++
+        if(k < 10)
+            k++
         setScale(k)
     }
     fun dec(){
-        k--
+        if(k > -9)
+            k--
         setScale(k)
     }
 
@@ -98,6 +110,10 @@ class MapView: View{
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        // При изменении размера виджета, данные параметры должны быть
+        // установлены в ноль, чтобы они обновились при следующей отрисовке
+        c_width = 0
+        c_height = 0
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
     }
 
@@ -111,20 +127,10 @@ class MapView: View{
             setScale(k)
         }
 
-//        if (is_rect_reset){
-//            // Деление на 2 нужно для того, чтобы ограничить правую и левую стороны
-//            //rect.left = width / 2 * scale_koeffs[Sides.LEFT.num]
-//            //rect.right = width/2 + width / 2 * scale_koeffs[Sides.RIGHT.num]
-//
-//            rect.top = height * scale_koeffs[Sides.TOP.num]
-//            rect.bottom = height * scale_koeffs[Sides.BOTTOM.num]
-//
-//        }
 
         canvas.apply {
             strokePaint.strokeWidth = 10F
-            //drawRect(5F, height.toFloat()/20, width.toFloat() - 5, height.toFloat() / 2, strokePaint)
-            //Log.i("tag", svg_str)
+            Log.i("tag", "Hello " + svg.documentWidth / rect.right + " " + svg.documentHeight / rect.bottom)
             drawPicture(pic, rect)
 
         }

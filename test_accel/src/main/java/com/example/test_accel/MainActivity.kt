@@ -159,6 +159,7 @@ class MainActivity : AppCompatActivity() {
                 "         id=\"path2012\" />\n" +
                 "    </g>\n" +
                 "  </g>\n" +
+
                 "</svg>\n"
         map = MapModel("test", "", Info(), svg_str)
         //Log.i("tag", "MainActivity")
@@ -167,6 +168,8 @@ class MainActivity : AppCompatActivity() {
         bind.mapView.setSvg(map.image)
         //bind.mapView.setSvg(resources.getString(R.string.test_square))
 
+
+        // Привязка масштабирования к кнопкам
         bind.addButton.setOnClickListener{
             bind.mapView.dec()
         }

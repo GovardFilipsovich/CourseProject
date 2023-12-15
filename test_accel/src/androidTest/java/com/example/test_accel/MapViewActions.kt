@@ -1,5 +1,6 @@
 package com.example.test_accel
 
+import android.graphics.PointF
 import android.view.View
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
@@ -19,6 +20,23 @@ class MapViewScaleAction(k_: Int) : ViewAction {
     override fun perform(uiController: UiController?, view: View?) {
         val map = view!! as MapView
         map.setScale(k)
+    }
+
+}
+
+class MapViewSetMarkerAction(p_: PointF) : ViewAction {
+    val p = p_
+    override fun getDescription(): String {
+        return "Данный класс нужен для обертки масштабирования в ViewAction"
+    }
+
+    override fun getConstraints(): Matcher<View> {
+        return isAssignableFrom(MapView::class.java)
+    }
+
+    override fun perform(uiController: UiController?, view: View?) {
+        val map = view!! as MapView
+        map.setMarker(p)
     }
 
 }
