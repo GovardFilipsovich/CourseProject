@@ -51,7 +51,7 @@ class ExampleInstrumentedTest {
     fun MarkerTesting(){
         var p_arr = arrayListOf<PointF>(PointF(0f,20f),
             PointF(5f, 30f), PointF(10f, 30f), PointF(20f, 30f),
-            PointF(30f, 30f), PointF(40f, 30f), PointF(50f, 30f), PointF(60f, 30f)
+            PointF(30f, 30f), PointF(40f, 30f), PointF(50f, 30f), PointF(60f, 30f), PointF(50f, 50f)
         )
         p_arr.forEach{
             Log.i("testing", it.toString())

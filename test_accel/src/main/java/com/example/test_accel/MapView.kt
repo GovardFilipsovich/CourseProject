@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.DrawableContainer
 import android.util.AttributeSet
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
@@ -42,18 +43,36 @@ class MapView: View{
 
     private var marker_coords = PointF(50f, 15f)
 
+    private var SETTING_PLACE_FLAG = false
+
+    fun setOnPlacement(){
+        SETTING_PLACE_FLAG = true;
+    }
+
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        when(event!!.action){
+            MotionEvent.ACTION_DOWN -> {
+                if(SETTING_PLACE_FLAG){
+                    setMarker(PointF(event.x / c_width * 100, event.y / c_height * 100))
+                    SETTING_PLACE_FLAG = false
+                }
+            }
+
+        }
+        return true;
+    }
     // Пример добавления круга план в svg
-    // "<ellipse cx=\"50\" cy=\"15\" rx=\"1.8\" ry=\"0.85\" stroke=\"red\" fill=\"red\" />\n"+
-    // Log.i("tag", "Hello " + svg.documentWidth / rect.right + " " + svg.documentHeight / rect.bottom)
     fun setMarker(p: PointF){
         marker_coords = p
         // Расчет размера маркера
         // Домножение на 0.6 связано с тем, что несмотря на то, что виджету выделяется некоторое пространство на холсте,
         // он занимает всю его ширину, и примерно 0.4 от высоты
         var rx = 10.0 / c_width * svg.documentWidth * 0.6
-        Log.i("testing", "" + rx)
+        //Log.i("testing", "" + rx)
         var ry = 10.0 / c_height * svg.documentHeight
-        Log.i("testing", "" + ry)
+        //Log.i("testing", "" + ry)
+        p.y -= 7
+
 
         // Сохранение плана без маркера
         val pr_svg_str = svg_str
@@ -118,7 +137,7 @@ class MapView: View{
 
     override fun invalidate() {
         super.invalidate()
-        Log.i("tag", "i")
+        //Log.i("tag", "i")
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -131,7 +150,7 @@ class MapView: View{
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        Log.i("tag", "before drawing " + strokePaint.toString())
+        //Log.i("tag", "before drawing " + strokePaint.toString())
         // Задание размеров виджета
         if(c_width==0){
             c_width = width
@@ -145,6 +164,6 @@ class MapView: View{
             drawPicture(pic, rect)
 
         }
-        Log.i("tag", "after drawing")
+        //Log.i("tag", "after drawing")
     }
 }
