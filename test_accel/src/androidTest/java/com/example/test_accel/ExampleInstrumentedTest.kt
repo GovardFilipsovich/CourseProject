@@ -42,7 +42,7 @@ class ExampleInstrumentedTest {
         repeat(20){
             onView(withId(R.id.mapView)).perform(MapViewScaleAction(-10+it))
             Log.i("testing", "Test num " + it + " scale: " + (-10+it))
-            Thread.sleep(600)
+            Thread.sleep(400)
         }
     }
 

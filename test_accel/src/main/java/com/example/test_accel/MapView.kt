@@ -35,8 +35,11 @@ class MapView: View{
     //private var scale_koeffs_land = floatArrayOf(0f,0.0f,1f,0.5f)
     private var rect: RectF = RectF(0f,0f,0f,0f)
     private var is_rect_reset = true
-    private var max_width = 25000
+
     private var c_width: Int = 0
+    private var c_height: Int = 0
+
+    private var k: Int = 1
 
     fun setSvg(str: String){
         svg = SVG.getFromString(str)
@@ -50,22 +53,31 @@ class MapView: View{
         scale_koeffs[Sides.RIGHT.num] = 1 + ((k-1)*0.1).toFloat()
     }
 
+    fun inc(){
+        k++
+        setScale(k)
+    }
+    fun dec(){
+        k--
+        setScale(k)
+    }
+
     fun setScale(k: Int){
         Log.i("tag", "not scaling")
-        // Масштабирование по горизонтали
         if(k > 11){
             throw ArithmeticException("Максимум достигнут")
         }
-        //scale_koeffs[Sides.LEFT.num] = ((k-1)*0.1).toFloat()
-        scale_koeffs[Sides.LEFT.num] = 1f
 
+        // Масштабирование по горизонтали
         // mid + (b1*q**(k-1))
-        //scale_koeffs[Sides.RIGHT.num] = (c_width/2 * 0.7.pow((k - 1).toDouble())).toFloat()
-        rect.left = c_width / 2 -(c_width/2 * 0.7.pow((k - 1).toDouble())).toFloat()
-        rect.right = c_width / 2 + (c_width/2 * 0.7.pow((k - 1).toDouble())).toFloat()
-        Log.i("testing", rect.right.toString() + " " + rect.left)
-        //TODO: масштабирование по вертикали
-        is_rect_reset = true
+        rect.left = c_width / 2 -(c_width/2 * 0.7.pow(k - 1)).toFloat()
+        rect.right = c_width / 2 + (c_width/2 * 0.7.pow(k - 1)).toFloat()
+
+        //масштабирование по вертикали
+        rect.top = (c_height * 0.1).toFloat()
+        rect.bottom = ((c_height * 0.1) + c_height * 0.5 * 0.7.pow(k-1)).toFloat()
+        Log.i("testing", "" + rect.top + " " + rect.bottom)
+//        is_rect_reset = true
         invalidate()
     }
 
@@ -95,17 +107,19 @@ class MapView: View{
         // Задание размеров виджета
         if(c_width==0){
             c_width = width
+            c_height = height
+            setScale(k)
         }
 
-        if (is_rect_reset){
-            // Деление на 2 нужно для того, чтобы ограничить правую и левую стороны
-            //rect.left = width / 2 * scale_koeffs[Sides.LEFT.num]
-            //rect.right = width/2 + width / 2 * scale_koeffs[Sides.RIGHT.num]
-
-            rect.top = height * scale_koeffs[Sides.TOP.num]
-            rect.bottom = height * scale_koeffs[Sides.BOTTOM.num]
-
-        }
+//        if (is_rect_reset){
+//            // Деление на 2 нужно для того, чтобы ограничить правую и левую стороны
+//            //rect.left = width / 2 * scale_koeffs[Sides.LEFT.num]
+//            //rect.right = width/2 + width / 2 * scale_koeffs[Sides.RIGHT.num]
+//
+//            rect.top = height * scale_koeffs[Sides.TOP.num]
+//            rect.bottom = height * scale_koeffs[Sides.BOTTOM.num]
+//
+//        }
 
         canvas.apply {
             strokePaint.strokeWidth = 10F

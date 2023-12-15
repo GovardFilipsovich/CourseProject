@@ -164,8 +164,16 @@ class MainActivity : AppCompatActivity() {
         //Log.i("tag", "MainActivity")
         //Log.i("tag", map.toString())
         bind.mapName.text = map.name
-        //bind.mapView.setSvg(map.image)
-        bind.mapView.setSvg(resources.getString(R.string.test_square))
+        bind.mapView.setSvg(map.image)
+        //bind.mapView.setSvg(resources.getString(R.string.test_square))
+
+        bind.addButton.setOnClickListener{
+            bind.mapView.dec()
+        }
+
+        bind.subButton.setOnClickListener{
+            bind.mapView.inc()
+        }
 
     }
 }
