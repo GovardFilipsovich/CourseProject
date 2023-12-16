@@ -39,7 +39,8 @@ class MapsActivity : AppCompatActivity(), OnMapClickListener {
         var source = arrayListOf<MapModel>()
         //var BASE_URL = "http://10.0.2.2:9000/"
         //var BASE_URL = "http://192.168.73.70:9000/"
-        val BASE_URL = "http://192.168.0.132:9000/"
+        //val BASE_URL = "http://192.168.0.132:9000/"
+        val BASE_URL = "http://192.168.91.70:9000/"
 
         val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)

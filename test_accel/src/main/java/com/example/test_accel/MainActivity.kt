@@ -17,6 +17,7 @@ import android.util.Log
 import androidx.core.content.ContextCompat
 import com.caverock.androidsvg.SVG
 import com.example.test_accel.databinding.ActivityMainBinding
+import kotlin.math.abs
 import kotlin.math.ceil
 
 class MainActivity : AppCompatActivity(), SensorEventListener {
@@ -62,37 +63,48 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
     fun init_sensors(){
         val sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        Log.i("testing", sensorManager.toString())
+        //Log.i("testing", sensorManager.toString())
         val stepSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
-        Log.i("testing", stepSensor.toString())
+        //Log.i("testing", stepSensor.toString())
         val accelSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+        val geoSensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
         sensorManager.registerListener(this, stepSensor, SensorManager.SENSOR_DELAY_NORMAL)
         sensorManager.registerListener(this, accelSensor, SensorManager.SENSOR_DELAY_NORMAL)
+        sensorManager.registerListener(this, geoSensor, SensorManager.SENSOR_DELAY_NORMAL)
     }
 
+
+    // Массивы для записи данных
+    private val accelerometerReading = FloatArray(3)
+    private val magnetometerReading = FloatArray(3)
+
+    private val rotationMatrix = FloatArray(9)
+    private val orientationAngles = FloatArray(3)
     override fun onSensorChanged(event: SensorEvent?) {
-        //Log.i("testing", event.toString())
-        //Log.i("testing", event!!.values[0].toString())
-        Log.i("testing", event!!.sensor.stringType)
-        when(event!!.sensor.type){
-            Sensor.TYPE_STEP_COUNTER -> {
-                if(start){
-                    start_steps = event.values[0].toInt()
-                    start = false
-                }
-                Log.i("testing", "Steps: " + (event.values[0] - start_steps) )
+        if(event!!.sensor.type == Sensor.TYPE_STEP_COUNTER){
+            if(start){
+                start_steps = event.values[0].toInt()
+                start = false
             }
-            Sensor.TYPE_ACCELEROMETER -> {
-//                Log.i("testing", "A x: " + event.values[0].toString())
-//                Log.i("testing", "A y: " + event.values[1].toString())
-//                Log.i("testing", "A z: " + event.values[2].toString())
-            }
+            Log.i("testing", "Steps: " + (event.values[0] - start_steps) )
+            updateOrientationAngles()
+        } else if (event.sensor.type == Sensor.TYPE_ACCELEROMETER) {
+            System.arraycopy(event.values, 0, accelerometerReading, 0, accelerometerReading.size)
+        } else if (event.sensor.type == Sensor.TYPE_MAGNETIC_FIELD) {
+            //Log.i("testing", "Geo: " + event.values[0] + )
+            System.arraycopy(event.values, 0, magnetometerReading, 0, magnetometerReading.size)
         }
+    }
 
-
-        // todo: выделить обновление интерфейса в отдельный поток
-
-
+    fun updateOrientationAngles() {
+        SensorManager.getRotationMatrix(
+            rotationMatrix,
+            null,
+            accelerometerReading,
+            magnetometerReading
+        )
+        SensorManager.getOrientation(rotationMatrix, orientationAngles)
+        Log.i("testing", "Orientation: " + orientationAngles[0] + " " + orientationAngles[1] + " " + orientationAngles[2])
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
