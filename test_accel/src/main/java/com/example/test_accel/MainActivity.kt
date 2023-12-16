@@ -25,6 +25,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     private var start = true
     private var start_steps = 0
     private val REQUEST_CODE = 239
+    private var angle = 0;
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         bind = ActivityMainBinding.inflate(layoutInflater)
@@ -60,23 +61,37 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     }
 
     fun init_sensors(){
-        var sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        val sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         Log.i("testing", sensorManager.toString())
-        var stepSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
+        val stepSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
         Log.i("testing", stepSensor.toString())
+        val accelSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
         sensorManager.registerListener(this, stepSensor, SensorManager.SENSOR_DELAY_NORMAL)
+        sensorManager.registerListener(this, accelSensor, SensorManager.SENSOR_DELAY_NORMAL)
     }
 
     override fun onSensorChanged(event: SensorEvent?) {
         //Log.i("testing", event.toString())
         //Log.i("testing", event!!.values[0].toString())
-        if(start){
-            start_steps = event!!.values[0].toInt()
-            start = false
+        Log.i("testing", event!!.sensor.stringType)
+        when(event!!.sensor.type){
+            Sensor.TYPE_STEP_COUNTER -> {
+                if(start){
+                    start_steps = event.values[0].toInt()
+                    start = false
+                }
+                Log.i("testing", "Steps: " + (event.values[0] - start_steps) )
+            }
+            Sensor.TYPE_ACCELEROMETER -> {
+//                Log.i("testing", "A x: " + event.values[0].toString())
+//                Log.i("testing", "A y: " + event.values[1].toString())
+//                Log.i("testing", "A z: " + event.values[2].toString())
+            }
         }
-        //Log.i("testing", "Steps: " + (event!!.values[0] - start_steps) )
+
 
         // todo: выделить обновление интерфейса в отдельный поток
+
 
     }
 

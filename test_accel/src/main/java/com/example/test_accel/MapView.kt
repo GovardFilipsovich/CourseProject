@@ -19,12 +19,6 @@ import kotlin.math.ceil
 import kotlin.math.min
 import kotlin.math.pow
 
-enum class Sides(val num: Int) {
-    LEFT(0),
-    TOP(1),
-    RIGHT(2),
-    BOTTOM(3)
-}
 class MapView: View{
     private val strokePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
@@ -47,6 +41,7 @@ class MapView: View{
 
     private var DEFAULT_MARKER_POSE = true
 
+
     fun setOnPlacement(){
         SETTING_PLACE_FLAG = true;
     }
@@ -66,17 +61,15 @@ class MapView: View{
     // Пример добавления круга план в svg
     fun setMarker(p: PointF){
         marker_coords = p
+        Log.i("testing", p.toString())
         // Расчет размера маркера
         // Домножение на 0.6 связано с тем, что несмотря на то, что виджету выделяется некоторое пространство на холсте,
         // он занимает всю его ширину, и примерно 0.4 от высоты
-        Log.i("testing", svg.documentHeight.toString())
+        // Log.i("testing", svg.documentHeight.toString())
         var rx = 10.0 / c_width * svg.documentWidth * 0.5
-        //Log.i("testing", "" + rx)
         var ry = 10.0 / c_height * svg.documentHeight / 0.6
-        //Log.i("testing", "" + ry)
 
         p.y -= 15
-
 
         // Сохранение плана без маркера
         val pr_svg_str = svg_str
@@ -117,21 +110,18 @@ class MapView: View{
         }
 
         // Масштабирование по горизонтали
-        // mid + (b1*q**(k-1))
         rect.left = c_width / 2 -(c_width/2 * 0.7.pow(k - 1)).toFloat()
         rect.right = c_width / 2 + (c_width/2 * 0.7.pow(k - 1)).toFloat()
 
         //масштабирование по вертикали
         rect.top = (c_height * 0.1).toFloat()
         rect.bottom = ((c_height * 0.1) + c_height * 0.5 * 0.7.pow(k-1)).toFloat()
-        //Log.i("testing", "" + rect.top + " " + rect.bottom)
 
         invalidate()
     }
 
     constructor(svg_par: String, context: Context, attributeSet: AttributeSet, defStyle: Int): super(context, attributeSet, defStyle){
         setSvg(svg_par)
-
     }
     constructor(svg_str: String, context: Context, attributeSet: AttributeSet): this(svg_str, context, attributeSet, 0)
 
@@ -154,7 +144,6 @@ class MapView: View{
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        //Log.i("tag", "before drawing " + strokePaint.toString())
         // Задание размеров виджета
         if(c_width==0){
             c_width = width
@@ -164,16 +153,13 @@ class MapView: View{
 
         canvas.apply {
             strokePaint.strokeWidth = 10F
-            //Log.i("tag", "Hello " + svg.documentWidth / rect.right + " " + svg.documentHeight / rect.bottom)
             drawPicture(pic, rect)
 
         }
-
         // Установка маркера по-умолчанию
         if(DEFAULT_MARKER_POSE){
             setMarker(marker_coords)
             DEFAULT_MARKER_POSE = false
         }
-        //Log.i("tag", "after drawing")
     }
 }
