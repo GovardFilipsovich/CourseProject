@@ -38,7 +38,9 @@ class MapsActivity : AppCompatActivity(), OnMapClickListener {
 
         var source = arrayListOf<MapModel>()
         //var BASE_URL = "http://10.0.2.2:9000/"
-        var BASE_URL = "http://192.168.73.70:9000/"
+        //var BASE_URL = "http://192.168.73.70:9000/"
+        val BASE_URL = "http://192.168.0.132:9000/"
+
         val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
@@ -65,24 +67,18 @@ class MapsActivity : AppCompatActivity(), OnMapClickListener {
                 override fun onFailure(call: Call<ServerResponse>, t: Throwable) {
                     Log.e("tag", "ERRORRRRRRR:  " + t.toString())
                 }
-
             }
         )
-
-
         cur_map = MapModel("", "", Info(), "")
-
         std_bottom_sheet = bind.bottomSheet
         val behavior = BottomSheetBehavior.from(std_bottom_sheet)
         behavior.state = BottomSheetBehavior.STATE_COLLAPSED
         behavior.peekHeight = 80
         behavior.isDraggable = true
 
-
         bind.openMapBut.setOnClickListener {
             transfer(cur_map)
         }
-
     }
 
     override fun OnMapClick(map: MapModel) {

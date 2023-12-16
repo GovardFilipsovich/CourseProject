@@ -55,7 +55,7 @@ class MapView: View{
         when(event!!.action){
             MotionEvent.ACTION_DOWN -> {
                 if(SETTING_PLACE_FLAG){
-                    setMarker(PointF(event.x / c_width * 100, event.y / c_height * 100))
+                    setMarker(PointF(event.x / c_width * 100, event.y * 2 / c_height * 100))
                     SETTING_PLACE_FLAG = false
                 }
             }
@@ -69,18 +69,19 @@ class MapView: View{
         // Расчет размера маркера
         // Домножение на 0.6 связано с тем, что несмотря на то, что виджету выделяется некоторое пространство на холсте,
         // он занимает всю его ширину, и примерно 0.4 от высоты
-        var rx = 10.0 / c_width * svg.documentWidth * 0.6
+        Log.i("testing", svg.documentHeight.toString())
+        var rx = 10.0 / c_width * svg.documentWidth * 0.5
         //Log.i("testing", "" + rx)
-        var ry = 10.0 / c_height * svg.documentHeight
+        var ry = 10.0 / c_height * svg.documentHeight / 0.6
         //Log.i("testing", "" + ry)
 
-        p.y -= 7
+        p.y -= 15
 
 
         // Сохранение плана без маркера
         val pr_svg_str = svg_str
 
-        val ellipse = "<ellipse cx=\"${p.x}\" cy=\"${p.y}\" rx=\"${rx}\" ry=\"${ry}\" stroke=\"#ff4f00\" fill=\"#ff4f00\" />"
+        val ellipse = "<ellipse cx=\"${p.x}%\" cy=\"${p.y}%\" rx=\"${rx}%\" ry=\"${ry}%\" stroke=\"#ff4f00\" fill=\"#ff4f00\" />"
         svg_str = svg_str.replace("</svg>", ellipse + " </svg>")
         setSvg(svg_str)
         // Возращаем план к состоянию, до добавленимя маркера
