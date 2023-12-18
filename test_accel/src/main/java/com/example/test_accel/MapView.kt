@@ -37,6 +37,8 @@ class MapView: View{
 
     private var marker_coords = PointF(50f, 15f)
 
+    fun getMarkerCoords() = marker_coords;
+
     private var SETTING_PLACE_FLAG = false
 
     private var DEFAULT_MARKER_POSE = true

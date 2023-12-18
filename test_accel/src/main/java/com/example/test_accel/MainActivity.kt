@@ -36,29 +36,29 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                 android.Manifest.permission.ACTIVITY_RECOGNITION) == PackageManager.PERMISSION_DENIED){
             requestPermissions(arrayOf(android.Manifest.permission.ACTIVITY_RECOGNITION), REQUEST_CODE)
         }
-        map = intent.getSerializableExtra("map") as MapModel
+        //map = intent.getSerializableExtra("map") as MapModel
 
-        //map = MapModel("test", "", Info(), svg_str)
+        map = MapModel("test", "", Info(), "")
         //Log.i("tag", "MainActivity")
         Log.i("tag", map.toString())
         bind.mapName.text = map.name
-        bind.mapView.setSvg(map.image)
-        //bind.mapView.setSvg(resources.getString(R.string.test_square))
-
-        // Привязка масштабирования к кнопкам
-        bind.addButton.setOnClickListener{
-            bind.mapView.dec()
-        }
-
-        bind.subButton.setOnClickListener{
-            bind.mapView.inc()
-        }
-
-        // Кнопка Установить свое местоположение
-        bind.placeButton.setOnClickListener {
-            bind.mapView.setOnPlacement()
-        }
-        init_sensors()
+        //bind.mapView.setSvg(map.image)
+        bind.mapView.setSvg(resources.getString(R.string.test_square))
+//
+//        // Привязка масштабирования к кнопкам
+//        bind.addButton.setOnClickListener{
+//            bind.mapView.dec()
+//        }
+//
+//        bind.subButton.setOnClickListener{
+//            bind.mapView.inc()
+//        }
+//
+//        // Кнопка Установить свое местоположение
+//        bind.placeButton.setOnClickListener {
+//            bind.mapView.setOnPlacement()
+//        }
+//        init_sensors()
     }
 
     fun init_sensors(){
@@ -105,6 +105,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         )
         SensorManager.getOrientation(rotationMatrix, orientationAngles)
         Log.i("testing", "Orientation: " + orientationAngles[0] + " " + orientationAngles[1] + " " + orientationAngles[2])
+        var p = bind.mapView.getMarkerCoords()
+        bind.mapView.setMarker(PointF((p.x+0.3).toFloat(), p.y))
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
